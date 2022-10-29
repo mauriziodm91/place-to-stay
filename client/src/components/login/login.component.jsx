@@ -12,11 +12,18 @@ import {
 import { useContext, useState, useRef, useEffect } from 'react'
 import PasswordField from '../passwordfield/passwordField.component'
 import GoogleOneTapLogin from '../google-one-tap-login/google-one-tap-login.component'
+import { register } from '../../utils/userRegister'
 import { Context } from '../../context/contextprovider.context'
 
 const Login = () => {
-  const { setCloseLogin, openLogin, setAlert, setStartLoading, setEndLoading } =
-    useContext(Context)
+  const {
+    setCloseLogin,
+    openLogin,
+    setAlert,
+    setStartLoading,
+    setEndLoading,
+    setCurrentUser,
+  } = useContext(Context)
   const [title, setTitle] = useState('Login')
   const [isRegister, setIsRegister] = useState(false)
   const nameRef = useRef()
@@ -26,24 +33,25 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-
-    //testing loading
-    setStartLoading()
-
-    setTimeout(() => {
-      setEndLoading()
-    }, 6000)
-
-    //testing notification
+    const email = emailRef.current.value
     const password = passwordRef.current.value
+    const name = nameRef.current.value
     const confirmPassword = confirmPasswordRef.current.value
-    if (password !== confirmPassword) {
-      setAlert({
+    if (password !== confirmPassword)
+      return setAlert({
         open: true,
         severity: 'error',
         message: 'Passwords do not match',
       })
-    }
+
+    register(
+      { name, email, password },
+      setStartLoading,
+      setEndLoading,
+      setCurrentUser,
+      setAlert,
+      setCloseLogin
+    )
   }
 
   useEffect(() => {
