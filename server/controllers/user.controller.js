@@ -39,6 +39,39 @@ async function register(req, res) {
   }
 }
 
+async function login(req, res) {
+  try {
+    const { email, password } = req.body
+    const emailLowercase = email.toLowerCase()
+    const existedUser = await User.findOne({ email: emailLowercase })
+    if (!existedUser)
+      return res
+        .status(404)
+        .json({ success: false, message: 'User does not exist!' })
+    const correctPasword = await bcrypt.compare(password, existedUser.password)
+    if (!correctPasword)
+      return res
+        .status(400)
+        .json({ success: false, message: 'Invalid Credentials' })
+
+    const { _id: id, name, photoURL } = existedUser
+    const token = jwt.sign({ id, name, photoURL }, process.env.JWT_SECRET, {
+      expiresIn: '1h',
+    })
+    res.status(200).json({
+      success: true,
+      result: { id, name, email: emailLowercase, photoURL, token },
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      success: false,
+      message: 'Something went wrong! try again later',
+    })
+  }
+}
+
 module.exports = {
   register,
+  login,
 }
