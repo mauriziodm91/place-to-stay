@@ -27,3 +27,22 @@ export const register = async (
   }
   setEndLoading()
 }
+
+export const login = async (
+  user,
+  setStartLoading,
+  setEndLoading,
+  setCurrentUser,
+  setCloseLogin
+) => {
+  setStartLoading()
+  const result = await fetchData(
+    { url: url + '/login', body: user },
+    setCurrentUser
+  )
+  if (result) {
+    setCurrentUser(result)
+    setCloseLogin()
+  }
+  setEndLoading()
+}

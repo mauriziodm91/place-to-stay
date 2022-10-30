@@ -12,7 +12,7 @@ import {
 import { useContext, useState, useRef, useEffect } from 'react'
 import PasswordField from '../passwordfield/passwordField.component'
 import GoogleOneTapLogin from '../google-one-tap-login/google-one-tap-login.component'
-import { register } from '../../utils/userRegister'
+import { register, login } from '../../utils/userRegister'
 import { Context } from '../../context/contextprovider.context'
 
 const Login = () => {
@@ -35,6 +35,14 @@ const Login = () => {
     e.preventDefault()
     const email = emailRef.current.value
     const password = passwordRef.current.value
+    if (!isRegister)
+      return login(
+        { email, password },
+        setStartLoading,
+        setEndLoading,
+        setCurrentUser,
+        setCloseLogin
+      )
     const name = nameRef.current.value
     const confirmPassword = confirmPasswordRef.current.value
     if (password !== confirmPassword)
