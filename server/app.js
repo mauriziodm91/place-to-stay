@@ -16,7 +16,7 @@ app.use((req, res, next) => {
 app.use(express.json({ limit: '10mb' }))
 
 app.use('/', api)
-app.use('/', (req, res) => res.json({ message: 'Welcome to out API' }))
+app.get('/', (req, res) => res.json({ message: 'Welcome to out API' }))
 app.use((req, res, next) => {
   res.status(404).json({ success: false, message: 'Not Found' })
 })

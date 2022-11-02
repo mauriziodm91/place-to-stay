@@ -56,7 +56,22 @@ const login = tryCatch(async function (req, res) {
   })
 })
 
+const updateProfile = tryCatch(async function (req, res) {
+  const updateUser = await User.findByIdAndUpdate(req.user.id, req.body, {
+    new: true,
+  })
+  const { _id: id, name, photoURL } = updateUser
+
+  //TODO update all rooms records added by the user
+
+  const token = jwt.sign({ id, name, photoURL }, process.env.JWT_SECRET, {
+    expiresIn: '1h',
+  })
+  res.status(200).json({ success: true, result: { name, photoURL, token } })
+})
+
 module.exports = {
   register,
   login,
+  updateProfile,
 }
