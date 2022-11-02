@@ -10,8 +10,10 @@ export const Context = createContext({
   setAlert: () => null,
   setStartLoading: () => null,
   setEndLoading: () => null,
+  setUpdateUser: () => null,
   alert: { open: false, severity: 'info', message: '' },
   loading: false,
+  profile: { open: false, file: null, photoURL: '' },
 })
 
 const ACTION_TYPES = {
@@ -21,6 +23,7 @@ const ACTION_TYPES = {
   UPDATE_ALERT: 'UPDATE_ALERT',
   START_LOADING: 'START_LOADING',
   END_LOADING: 'END_LOADING',
+  UPDATE_PROFILE: 'UPDATE_PROFILE',
 }
 
 const INITIAL_STATE = {
@@ -28,6 +31,7 @@ const INITIAL_STATE = {
   openLogin: false,
   alert: { open: false, severity: 'info', message: '' },
   loading: false,
+  profile: { open: false, file: null, photoUrl: '' },
 }
 
 const reducer = (state, action) => {
@@ -46,16 +50,16 @@ const reducer = (state, action) => {
       return { ...state, currentUser: payload }
     case ACTION_TYPES.UPDATE_ALERT:
       return { ...state, alert: payload }
+    case ACTION_TYPES.UPDATE_PROFILE:
+      return { ...state, profile: payload }
     default:
       throw new Error('no matched action')
   }
 }
 
 export const ContextProvider = ({ children }) => {
-  const [{ currentUser, openLogin, alert, loading }, dispatch] = useReducer(
-    reducer,
-    INITIAL_STATE
-  )
+  const [{ currentUser, openLogin, alert, loading, profile }, dispatch] =
+    useReducer(reducer, INITIAL_STATE)
 
   const setCurrentUser = (user) => {
     dispatch(createAction(ACTION_TYPES.USER_UPDATE, user))
@@ -79,6 +83,11 @@ export const ContextProvider = ({ children }) => {
     dispatch(createAction(ACTION_TYPES.UPDATE_ALERT, alertParameters))
   }
 
+  const setUpdateUser = (profile) => {
+    console.log(profile)
+    dispatch(createAction(ACTION_TYPES.UPDATE_PROFILE, profile))
+  }
+
   useEffect(() => {
     const loggedUser = JSON.parse(localStorage.getItem('currentUser'))
     if (loggedUser) {
@@ -97,6 +106,8 @@ export const ContextProvider = ({ children }) => {
     loading,
     setStartLoading,
     setEndLoading,
+    setUpdateUser,
+    profile,
   }
   return <Context.Provider value={value}>{children}</Context.Provider>
 }
