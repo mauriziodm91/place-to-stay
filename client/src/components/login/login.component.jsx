@@ -41,7 +41,8 @@ const Login = () => {
         setStartLoading,
         setEndLoading,
         setCurrentUser,
-        setCloseLogin
+        setCloseLogin,
+        setAlert
       )
     const name = nameRef.current.value
     const confirmPassword = confirmPasswordRef.current.value

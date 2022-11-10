@@ -84,7 +84,6 @@ export const ContextProvider = ({ children }) => {
   }
 
   const setUpdateUser = (profile) => {
-    console.log(profile)
     dispatch(createAction(ACTION_TYPES.UPDATE_PROFILE, profile))
   }
 

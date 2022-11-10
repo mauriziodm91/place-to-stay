@@ -35,12 +35,14 @@ export const login = async (
   setStartLoading,
   setEndLoading,
   setCurrentUser,
-  setCloseLogin
+  setCloseLogin,
+  setAlert
 ) => {
   setStartLoading()
   const result = await fetchData(
     { url: url + '/login', body: user },
-    setCurrentUser
+    setCurrentUser,
+    setAlert
   )
   if (result) {
     setCurrentUser(result)
@@ -81,10 +83,8 @@ export const updateProfile = async (
       setCurrentUser,
       setAlert
     )
-    console.log(result)
     if (result) {
       setCurrentUser({ ...currentUser, ...result })
-      console.log(currentUser)
       setAlert({
         open: true,
         severity: 'success',
