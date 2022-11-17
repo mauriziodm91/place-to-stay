@@ -11,9 +11,11 @@ export const Context = createContext({
   setStartLoading: () => null,
   setEndLoading: () => null,
   setUpdateUser: () => null,
+  setUpdateImages: () => null,
   alert: { open: false, severity: 'info', message: '' },
   loading: false,
   profile: { open: false, file: null, photoURL: '' },
+  images: [],
 })
 
 const ACTION_TYPES = {
@@ -24,6 +26,7 @@ const ACTION_TYPES = {
   START_LOADING: 'START_LOADING',
   END_LOADING: 'END_LOADING',
   UPDATE_PROFILE: 'UPDATE_PROFILE',
+  UPDATE_IMAGES: 'UPDATE_IMAGES',
 }
 
 const INITIAL_STATE = {
@@ -32,6 +35,7 @@ const INITIAL_STATE = {
   alert: { open: false, severity: 'info', message: '' },
   loading: false,
   profile: { open: false, file: null, photoUrl: '' },
+  images: [],
 }
 
 const reducer = (state, action) => {
@@ -52,6 +56,8 @@ const reducer = (state, action) => {
       return { ...state, alert: payload }
     case ACTION_TYPES.UPDATE_PROFILE:
       return { ...state, profile: payload }
+    case ACTION_TYPES.UPDATE_IMAGES:
+      return { ...state, images: [...state.images, payload] }
     default:
       throw new Error('no matched action')
   }
@@ -87,6 +93,10 @@ export const ContextProvider = ({ children }) => {
     dispatch(createAction(ACTION_TYPES.UPDATE_PROFILE, profile))
   }
 
+  const setUpdateImages = (url) => {
+    dispatch(createAction(ACTION_TYPES.UPDATE_IMAGES, url))
+  }
+
   useEffect(() => {
     const loggedUser = JSON.parse(localStorage.getItem('currentUser'))
     if (loggedUser) {
@@ -107,6 +117,7 @@ export const ContextProvider = ({ children }) => {
     setEndLoading,
     setUpdateUser,
     profile,
+    setUpdateImages,
   }
   return <Context.Provider value={value}>{children}</Context.Provider>
 }
