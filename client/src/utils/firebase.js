@@ -7,6 +7,7 @@ import {
   ref,
   uploadBytes,
   uploadBytesResumable,
+  deleteObject,
 } from 'firebase/storage'
 // TODO: Add SDKs for Firebase products that you want to use
 
@@ -74,4 +75,9 @@ export const uploadFileProgress = (file, subFolder, imageName, setProgress) => {
       }
     )
   })
+}
+
+export const deleteFile = (filePath) => {
+  const imageRef = ref(storage, filePath)
+  return deleteObject(imageRef)
 }

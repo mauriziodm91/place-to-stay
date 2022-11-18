@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import {
   Button,
   Container,
@@ -11,9 +11,11 @@ import {
 import AddLocation from '../add-location/add-location.component'
 import AddDetails from '../add-details/add-details.component'
 import AddImages from '../add-images/add-images.component'
+import { Context } from '../../context/contextprovider.context'
 
 const AddRoom = () => {
   const [activeStep, setActiveStep] = useState(0)
+  const { images } = useContext(Context)
   const [steps, setSteps] = useState([
     { label: 'Location', completed: false },
     { label: 'Details', completed: false },
@@ -37,6 +39,20 @@ const AddRoom = () => {
   }
   const findUnfinished = () => steps.findIndex((step) => !step.completed)
 
+  useEffect(() => {
+    if (images.length) {
+      if (!steps[2].completed) setComplete(2, true)
+    } else {
+      if (steps[2].completed) setComplete(2, false)
+    }
+  }, [images])
+
+  const setComplete = (index, status) => {
+    setSteps((steps) => {
+      steps[index].completed = status
+      return [...steps]
+    })
+  }
   return (
     <Container sx={{ my: 4 }}>
       <Stepper

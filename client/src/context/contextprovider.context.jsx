@@ -12,6 +12,7 @@ export const Context = createContext({
   setEndLoading: () => null,
   setUpdateUser: () => null,
   setUpdateImages: () => null,
+  setDeleteImage: () => null,
   alert: { open: false, severity: 'info', message: '' },
   loading: false,
   profile: { open: false, file: null, photoURL: '' },
@@ -27,6 +28,7 @@ const ACTION_TYPES = {
   END_LOADING: 'END_LOADING',
   UPDATE_PROFILE: 'UPDATE_PROFILE',
   UPDATE_IMAGES: 'UPDATE_IMAGES',
+  DELETE_IMAGE: 'DELETE_IMAGE',
 }
 
 const INITIAL_STATE = {
@@ -58,14 +60,21 @@ const reducer = (state, action) => {
       return { ...state, profile: payload }
     case ACTION_TYPES.UPDATE_IMAGES:
       return { ...state, images: [...state.images, payload] }
+    case ACTION_TYPES.DELETE_IMAGE:
+      return {
+        ...state,
+        images: state.images.filter((image) => image !== payload),
+      }
     default:
       throw new Error('no matched action')
   }
 }
 
 export const ContextProvider = ({ children }) => {
-  const [{ currentUser, openLogin, alert, loading, profile }, dispatch] =
-    useReducer(reducer, INITIAL_STATE)
+  const [
+    { currentUser, openLogin, alert, loading, profile, images },
+    dispatch,
+  ] = useReducer(reducer, INITIAL_STATE)
 
   const setCurrentUser = (user) => {
     dispatch(createAction(ACTION_TYPES.USER_UPDATE, user))
@@ -97,6 +106,10 @@ export const ContextProvider = ({ children }) => {
     dispatch(createAction(ACTION_TYPES.UPDATE_IMAGES, url))
   }
 
+  const setDeleteImage = (image) => {
+    dispatch(createAction(ACTION_TYPES.DELETE_IMAGE, image))
+  }
+
   useEffect(() => {
     const loggedUser = JSON.parse(localStorage.getItem('currentUser'))
     if (loggedUser) {
@@ -118,6 +131,8 @@ export const ContextProvider = ({ children }) => {
     setUpdateUser,
     profile,
     setUpdateImages,
+    images,
+    setDeleteImage,
   }
   return <Context.Provider value={value}>{children}</Context.Provider>
 }

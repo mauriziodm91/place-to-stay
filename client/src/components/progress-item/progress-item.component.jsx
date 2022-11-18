@@ -21,7 +21,6 @@ const ProgressItem = ({ file }) => {
           imageName,
           setProgress
         )
-        console.log('subiendo')
         setUpdateImages(url)
         setImageURL(null)
       } catch (error) {

@@ -7,12 +7,20 @@ import {
 } from '@mui/material'
 import { Context } from '../../context/contextprovider.context'
 import { Cancel } from '@mui/icons-material'
+import { deleteFile } from '../../utils/firebase'
 
 const ImagesList = () => {
-  const { images, currentUser } = useContext(Context)
+  const { images, currentUser, setDeleteImage } = useContext(Context)
 
-  const handleDelete = async (image) => {}
-  console.log(currentUser)
+  const handleDelete = async (image) => {
+    setDeleteImage(image)
+    const imageName = image?.split(`${currentUser?.id}%2F`)[1]?.split('?')[0]
+    try {
+      await deleteFile(`rooms/${currentUser?.id}/${imageName}`)
+    } catch (error) {
+      console.log(error)
+    }
+  }
   return (
     <ImageList
       rowHeight={250}

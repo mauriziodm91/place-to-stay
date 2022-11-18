@@ -37,6 +37,7 @@ const AddImages = () => {
         </div>
       </Paper>
       <ProgressList {...{ files }} />
+      <ImagesList />
     </>
   )
 }
