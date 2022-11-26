@@ -13,10 +13,12 @@ export const Context = createContext({
   setUpdateUser: () => null,
   setUpdateImages: () => null,
   setDeleteImage: () => null,
+  setUpdateDetails: () => null,
   alert: { open: false, severity: 'info', message: '' },
   loading: false,
   profile: { open: false, file: null, photoURL: '' },
   images: [],
+  details: { title: '', description: '', price: 0 },
 })
 
 const ACTION_TYPES = {
@@ -29,6 +31,7 @@ const ACTION_TYPES = {
   UPDATE_PROFILE: 'UPDATE_PROFILE',
   UPDATE_IMAGES: 'UPDATE_IMAGES',
   DELETE_IMAGE: 'DELETE_IMAGE',
+  UPDATE_DETAILS: 'UPDATE_DETAILS',
 }
 
 const INITIAL_STATE = {
@@ -38,6 +41,7 @@ const INITIAL_STATE = {
   loading: false,
   profile: { open: false, file: null, photoUrl: '' },
   images: [],
+  details: { title: '', description: '', price: 0 },
 }
 
 const reducer = (state, action) => {
@@ -65,6 +69,11 @@ const reducer = (state, action) => {
         ...state,
         images: state.images.filter((image) => image !== payload),
       }
+    case ACTION_TYPES.UPDATE_DETAILS:
+      return {
+        ...state,
+        details: { ...state.details, ...payload },
+      }
     default:
       throw new Error('no matched action')
   }
@@ -72,7 +81,7 @@ const reducer = (state, action) => {
 
 export const ContextProvider = ({ children }) => {
   const [
-    { currentUser, openLogin, alert, loading, profile, images },
+    { currentUser, openLogin, alert, loading, profile, images, details },
     dispatch,
   ] = useReducer(reducer, INITIAL_STATE)
 
@@ -110,6 +119,10 @@ export const ContextProvider = ({ children }) => {
     dispatch(createAction(ACTION_TYPES.DELETE_IMAGE, image))
   }
 
+  const setUpdateDetails = (detail) => {
+    dispatch(createAction(ACTION_TYPES.UPDATE_DETAILS, detail))
+  }
+
   useEffect(() => {
     const loggedUser = JSON.parse(localStorage.getItem('currentUser'))
     if (loggedUser) {
@@ -133,6 +146,8 @@ export const ContextProvider = ({ children }) => {
     setUpdateImages,
     images,
     setDeleteImage,
+    setUpdateDetails,
+    details,
   }
   return <Context.Provider value={value}>{children}</Context.Provider>
 }
