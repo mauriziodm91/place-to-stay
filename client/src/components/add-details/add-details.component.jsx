@@ -6,10 +6,10 @@ import {
   FormControlLabel,
   Radio,
   TextField,
-  Input,
   InputAdornment,
 } from '@mui/material'
 import { Context } from '../../context/contextprovider.context'
+import InfoField from '../info-details/info-details.component'
 
 const AddDetails = () => {
   const {
@@ -36,7 +36,7 @@ const AddDetails = () => {
     <Stack
       sx={{
         alignItems: 'center',
-        '&.MuiTextField-root': { width: '100%', maxWidth: 500, m: 1 },
+        '& .MuiTextField-root': { width: '100%', maxWidth: 500, m: 1 },
       }}
     >
       <FormControl>
@@ -65,6 +65,19 @@ const AddDetails = () => {
           )}
         </RadioGroup>
       </FormControl>
+      <InfoField
+        mainProps={{ name: 'title', label: 'Title', value: title }}
+        minlength={5}
+      />
+      <InfoField
+        mainProps={{
+          name: 'description',
+          label: 'Description',
+          value: description,
+        }}
+        minlength={10}
+        optionalProps={{ multiline: true, rows: 4 }}
+      />
     </Stack>
   )
 }
