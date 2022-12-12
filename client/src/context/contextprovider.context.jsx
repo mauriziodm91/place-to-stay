@@ -14,11 +14,13 @@ export const Context = createContext({
   setUpdateImages: () => null,
   setDeleteImage: () => null,
   setUpdateDetails: () => null,
+  setUpdateLocation: () => null,
   alert: { open: false, severity: 'info', message: '' },
   loading: false,
   profile: { open: false, file: null, photoURL: '' },
   images: [],
   details: { title: '', description: '', price: 0 },
+  location: { lng: 0, lat: 0 },
 })
 
 const ACTION_TYPES = {
@@ -32,6 +34,7 @@ const ACTION_TYPES = {
   UPDATE_IMAGES: 'UPDATE_IMAGES',
   DELETE_IMAGE: 'DELETE_IMAGE',
   UPDATE_DETAILS: 'UPDATE_DETAILS',
+  UPDATE_LOCATION: 'UPDATE_LOCATION',
 }
 
 const INITIAL_STATE = {
@@ -42,6 +45,7 @@ const INITIAL_STATE = {
   profile: { open: false, file: null, photoUrl: '' },
   images: [],
   details: { title: '', description: '', price: 0 },
+  location: { lng: 0, lat: 0 },
 }
 
 const reducer = (state, action) => {
@@ -74,6 +78,11 @@ const reducer = (state, action) => {
         ...state,
         details: { ...state.details, ...payload },
       }
+    case ACTION_TYPES.UPDATE_LOCATION:
+      return {
+        ...state,
+        location: payload,
+      }
     default:
       throw new Error('no matched action')
   }
@@ -81,7 +90,16 @@ const reducer = (state, action) => {
 
 export const ContextProvider = ({ children }) => {
   const [
-    { currentUser, openLogin, alert, loading, profile, images, details },
+    {
+      currentUser,
+      openLogin,
+      alert,
+      loading,
+      profile,
+      images,
+      details,
+      location,
+    },
     dispatch,
   ] = useReducer(reducer, INITIAL_STATE)
 
@@ -123,6 +141,10 @@ export const ContextProvider = ({ children }) => {
     dispatch(createAction(ACTION_TYPES.UPDATE_DETAILS, detail))
   }
 
+  const setUpdateLocation = (location) => {
+    dispatch(createAction(ACTION_TYPES.UPDATE_LOCATION, location))
+  }
+
   useEffect(() => {
     const loggedUser = JSON.parse(localStorage.getItem('currentUser'))
     if (loggedUser) {
@@ -148,6 +170,8 @@ export const ContextProvider = ({ children }) => {
     setDeleteImage,
     setUpdateDetails,
     details,
+    location,
+    setUpdateLocation,
   }
   return <Context.Provider value={value}>{children}</Context.Provider>
 }
