@@ -19,13 +19,13 @@ async function auth(req, res, next) {
       req.user = {
         id: payload.sub,
         name: payload.name,
-        photoUrl: payload.picture,
+        photoURL: payload.picture,
       }
     } else {
       //verify our custon jwt token
       const decodedToken = jwt.verify(token, process.env.JWT_SECRET)
-      const { id, name, photoUrl } = decodedToken
-      req.user = { id, name, photoUrl }
+      const { id, name, photoURL } = decodedToken
+      req.user = { id, name, photoURL }
     }
     next()
   } catch (error) {
