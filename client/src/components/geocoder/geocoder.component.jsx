@@ -13,7 +13,7 @@ const Geocoder = () => {
   })
   useControl(() => ctrl)
   ctrl.on('result', (e) => {
-    const coords = e.results.geometry.coordinates
+    const coords = e.result.geometry.coordinates
     setUpdateLocation({ lng: coords[0], lat: coords[1] })
   })
   return null
