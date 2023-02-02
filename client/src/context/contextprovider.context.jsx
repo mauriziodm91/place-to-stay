@@ -15,6 +15,7 @@ export const Context = createContext({
   setDeleteImage: () => null,
   setUpdateDetails: () => null,
   setUpdateLocation: () => null,
+  setResetRoom: () => null,
   alert: { open: false, severity: 'info', message: '' },
   loading: false,
   profile: { open: false, file: null, photoURL: '' },
@@ -35,6 +36,7 @@ const ACTION_TYPES = {
   DELETE_IMAGE: 'DELETE_IMAGE',
   UPDATE_DETAILS: 'UPDATE_DETAILS',
   UPDATE_LOCATION: 'UPDATE_LOCATION',
+  RESET_ROOM: 'RESET_ROOM',
 }
 
 const INITIAL_STATE = {
@@ -82,6 +84,13 @@ const reducer = (state, action) => {
       return {
         ...state,
         location: payload,
+      }
+    case ACTION_TYPES.RESET_ROOM:
+      return {
+        ...state,
+        images: [],
+        details: { title: '', description: '', price: 0 },
+        location: { lng: 0, lat: 0 },
       }
     default:
       throw new Error('no matched action')
@@ -145,6 +154,10 @@ export const ContextProvider = ({ children }) => {
     dispatch(createAction(ACTION_TYPES.UPDATE_LOCATION, location))
   }
 
+  const setResetRoom = () => {
+    dispatch(createAction(ACTION_TYPES.RESET_ROOM))
+  }
+
   useEffect(() => {
     const loggedUser = JSON.parse(localStorage.getItem('currentUser'))
     if (loggedUser) {
@@ -172,6 +185,7 @@ export const ContextProvider = ({ children }) => {
     details,
     location,
     setUpdateLocation,
+    setResetRoom,
   }
   return <Context.Provider value={value}>{children}</Context.Provider>
 }

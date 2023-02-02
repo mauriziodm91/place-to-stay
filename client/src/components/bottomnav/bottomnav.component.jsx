@@ -9,6 +9,7 @@ import { LocationOn, Bed, AddLocationAlt } from '@mui/icons-material'
 import ClusterMap from '../map/map.component'
 import Rooms from '../rooms/rooms.component'
 import AddRoom from '../addroom/addroom.component'
+import Protected from '../protected/protected.component'
 const BottomNav = () => {
   const [value, setValue] = useState(0)
   const ref = useRef()
@@ -21,7 +22,11 @@ const BottomNav = () => {
         {
           0: <ClusterMap />,
           1: <Rooms />,
-          2: <AddRoom />,
+          2: (
+            <Protected>
+              <AddRoom setPage={setValue} />{' '}
+            </Protected>
+          ),
         }[value]
       }
       <Paper
