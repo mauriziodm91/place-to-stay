@@ -13,7 +13,7 @@ import AddDetails from '../add-details/add-details.component'
 import AddImages from '../add-images/add-images.component'
 import { Context } from '../../context/contextprovider.context'
 import { Send } from '@mui/icons-material'
-import { createRoom } from '../../utils/createRoom'
+import { createRoom } from '../../utils/roomsActions'
 
 const AddRoom = ({ setPage }) => {
   const [activeStep, setActiveStep] = useState(0)

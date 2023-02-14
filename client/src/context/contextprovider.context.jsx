@@ -16,12 +16,14 @@ export const Context = createContext({
   setUpdateDetails: () => null,
   setUpdateLocation: () => null,
   setResetRoom: () => null,
+  setUpdateRooms: () => null,
   alert: { open: false, severity: 'info', message: '' },
   loading: false,
   profile: { open: false, file: null, photoURL: '' },
   images: [],
   details: { title: '', description: '', price: 0 },
   location: { lng: 0, lat: 0 },
+  rooms: [],
 })
 
 const ACTION_TYPES = {
@@ -37,6 +39,7 @@ const ACTION_TYPES = {
   UPDATE_DETAILS: 'UPDATE_DETAILS',
   UPDATE_LOCATION: 'UPDATE_LOCATION',
   RESET_ROOM: 'RESET_ROOM',
+  UPDATE_ROOMS: 'UPDATE_ROOMS',
 }
 
 const INITIAL_STATE = {
@@ -48,6 +51,7 @@ const INITIAL_STATE = {
   images: [],
   details: { title: '', description: '', price: 0 },
   location: { lng: 0, lat: 0 },
+  rooms: [],
 }
 
 const reducer = (state, action) => {
@@ -92,6 +96,11 @@ const reducer = (state, action) => {
         details: { title: '', description: '', price: 0 },
         location: { lng: 0, lat: 0 },
       }
+    case ACTION_TYPES.UPDATE_ROOMS:
+      return {
+        ...state,
+        rooms: payload,
+      }
     default:
       throw new Error('no matched action')
   }
@@ -108,6 +117,7 @@ export const ContextProvider = ({ children }) => {
       images,
       details,
       location,
+      rooms,
     },
     dispatch,
   ] = useReducer(reducer, INITIAL_STATE)
@@ -158,6 +168,10 @@ export const ContextProvider = ({ children }) => {
     dispatch(createAction(ACTION_TYPES.RESET_ROOM))
   }
 
+  const setUpdateRooms = (rooms) => {
+    dispatch(createAction(ACTION_TYPES.UPDATE_ROOMS, rooms))
+  }
+
   useEffect(() => {
     const loggedUser = JSON.parse(localStorage.getItem('currentUser'))
     if (loggedUser) {
@@ -186,6 +200,8 @@ export const ContextProvider = ({ children }) => {
     location,
     setUpdateLocation,
     setResetRoom,
+    rooms,
+    setUpdateRooms,
   }
   return <Context.Provider value={value}>{children}</Context.Provider>
 }

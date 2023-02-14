@@ -28,3 +28,11 @@ export const createRoom = async (
   }
   setEndLoading()
 }
+
+export const getRooms = async (setAlert, setUpdateRooms) => {
+  const result = await fetchData({ url, method: 'GET' }, setAlert)
+  if (result) {
+    //TODO DISPATCH ROOMS
+    setUpdateRooms(result)
+  }
+}
