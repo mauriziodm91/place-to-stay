@@ -2,6 +2,7 @@ const User = require('../models/user.model')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const tryCatch = require('../utils/tryCatch')
+const Room = require('../models/room.model')
 
 const register = tryCatch(async function (req, res) {
   const { name, email, password } = req.body
@@ -62,7 +63,7 @@ const updateProfile = tryCatch(async function (req, res) {
   })
   const { _id: id, name, photoURL } = updateUser
 
-  //TODO update all rooms records added by the user
+  await Room.updateMany({ uid: id }, { uName: name, uPhoto: photoURL })
 
   const token = jwt.sign({ id, name, photoURL }, process.env.JWT_SECRET, {
     expiresIn: '1h',
