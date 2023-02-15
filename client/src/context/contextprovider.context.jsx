@@ -1,4 +1,4 @@
-import { createContext, useReducer, useEffect } from 'react'
+import { createContext, useReducer, useEffect, useRef } from 'react'
 import { createAction } from '../utils/createAction.js'
 
 export const Context = createContext({
@@ -24,6 +24,7 @@ export const Context = createContext({
   details: { title: '', description: '', price: 0 },
   location: { lng: 0, lat: 0 },
   rooms: [],
+  mapRef: null,
 })
 
 const ACTION_TYPES = {
@@ -121,6 +122,7 @@ export const ContextProvider = ({ children }) => {
     },
     dispatch,
   ] = useReducer(reducer, INITIAL_STATE)
+  const mapRef = useRef()
 
   const setCurrentUser = (user) => {
     dispatch(createAction(ACTION_TYPES.USER_UPDATE, user))
@@ -202,6 +204,7 @@ export const ContextProvider = ({ children }) => {
     setResetRoom,
     rooms,
     setUpdateRooms,
+    mapRef,
   }
   return <Context.Provider value={value}>{children}</Context.Provider>
 }
