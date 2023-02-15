@@ -1,5 +1,6 @@
 import { createContext, useReducer, useEffect, useRef } from 'react'
 import { createAction } from '../utils/createAction.js'
+import { applyFilter } from '../utils/applyFilter.js'
 
 export const Context = createContext({
   currentUser: null,
@@ -17,6 +18,9 @@ export const Context = createContext({
   setUpdateLocation: () => null,
   setResetRoom: () => null,
   setUpdateRooms: () => null,
+  setPriceFilter: () => null,
+  setFilterAddress: () => null,
+  setClearAddress: () => null,
   alert: { open: false, severity: 'info', message: '' },
   loading: false,
   profile: { open: false, file: null, photoURL: '' },
@@ -25,6 +29,9 @@ export const Context = createContext({
   location: { lng: 0, lat: 0 },
   rooms: [],
   mapRef: null,
+  priceFilter: 0,
+  containerRef: null,
+  filteredRooms: [],
 })
 
 const ACTION_TYPES = {
@@ -41,6 +48,9 @@ const ACTION_TYPES = {
   UPDATE_LOCATION: 'UPDATE_LOCATION',
   RESET_ROOM: 'RESET_ROOM',
   UPDATE_ROOMS: 'UPDATE_ROOMS',
+  FILTER_PRICE: 'FILTER_PRICE',
+  FILTER_ADDRESS: 'FILTER_ADDRESS',
+  CLEAR_ADDRESS: 'CLEAR_ADDRESS',
 }
 
 const INITIAL_STATE = {
@@ -53,6 +63,9 @@ const INITIAL_STATE = {
   details: { title: '', description: '', price: 0 },
   location: { lng: 0, lat: 0 },
   rooms: [],
+  priceFilter: 50,
+  addressFilter: null,
+  filteredRooms: [],
 }
 
 const reducer = (state, action) => {
@@ -101,6 +114,30 @@ const reducer = (state, action) => {
       return {
         ...state,
         rooms: payload,
+        addressFilter: null,
+        priceFilter: 50,
+        filteredRooms: payload,
+      }
+    case ACTION_TYPES.FILTER_PRICE:
+      return {
+        ...state,
+        priceFilter: payload,
+        filteredRooms: applyFilter(state.rooms, state.addressFilter, payload),
+      }
+
+    case ACTION_TYPES.FILTER_ADDRESS:
+      return {
+        ...state,
+        addressFilter: payload,
+        filteredRooms: applyFilter(state.rooms, payload, state.priceFilter),
+      }
+
+    case ACTION_TYPES.CLEAR_ADDRESS:
+      return {
+        ...state,
+        addressFilter: null,
+        priceFilter: 50,
+        filteredRooms: state.rooms,
       }
     default:
       throw new Error('no matched action')
@@ -119,10 +156,13 @@ export const ContextProvider = ({ children }) => {
       details,
       location,
       rooms,
+      priceFilter,
+      filteredRooms,
     },
     dispatch,
   ] = useReducer(reducer, INITIAL_STATE)
   const mapRef = useRef()
+  const containerRef = useRef()
 
   const setCurrentUser = (user) => {
     dispatch(createAction(ACTION_TYPES.USER_UPDATE, user))
@@ -174,6 +214,18 @@ export const ContextProvider = ({ children }) => {
     dispatch(createAction(ACTION_TYPES.UPDATE_ROOMS, rooms))
   }
 
+  const setPriceFilter = (filterPrice) => {
+    dispatch(createAction(ACTION_TYPES.FILTER_PRICE, filterPrice))
+  }
+
+  const setFilterAddress = (coords) => {
+    dispatch(createAction(ACTION_TYPES.FILTER_ADDRESS, coords))
+  }
+
+  const setClearAddress = () => {
+    dispatch(createAction(ACTION_TYPES.CLEAR_ADDRESS))
+  }
+
   useEffect(() => {
     const loggedUser = JSON.parse(localStorage.getItem('currentUser'))
     if (loggedUser) {
@@ -205,6 +257,12 @@ export const ContextProvider = ({ children }) => {
     rooms,
     setUpdateRooms,
     mapRef,
+    priceFilter,
+    setPriceFilter,
+    containerRef,
+    setFilterAddress,
+    setClearAddress,
+    filteredRooms,
   }
   return <Context.Provider value={value}>{children}</Context.Provider>
 }

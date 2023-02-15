@@ -3,6 +3,7 @@ import { Context } from '../../context/contextprovider.context'
 import { getRooms } from '../../utils/roomsActions'
 import ReactMapGl, { Marker } from 'react-map-gl'
 import { Avatar, Box, Paper, Tooltip } from '@mui/material'
+import GeocoderInput from '../geocoder-input/geocoder-input.component'
 import Supercluster from 'supercluster'
 import './map.styles.css'
 
@@ -12,18 +13,26 @@ const supercluster = new Supercluster({
 })
 
 const ClusterMap = () => {
-  const { rooms, setAlert, setUpdateRooms, mapRef } = useContext(Context)
+  const { filteredRooms, setAlert, setUpdateRooms, mapRef } =
+    useContext(Context)
   const [points, setPoints] = useState([])
   const [clusters, setClusters] = useState([])
   const [bounds, setBounds] = useState([-180, -85, 180, 85])
   const [zoom, setZoom] = useState(0)
 
+  let isMounted = true
+
   useEffect(() => {
-    getRooms(setAlert, setUpdateRooms)
+    if (isMounted) {
+      getRooms(setAlert, setUpdateRooms)
+    }
+    return () => {
+      isMounted = false
+    }
   }, [])
 
   useEffect(() => {
-    const points = rooms.map((room) => ({
+    const points = filteredRooms.map((room) => ({
       type: 'Feature',
       properties: {
         cluster: false,
@@ -43,7 +52,7 @@ const ClusterMap = () => {
       },
     }))
     setPoints(points)
-  }, [rooms])
+  }, [filteredRooms])
 
   useEffect(() => {
     supercluster.load(points)
@@ -117,6 +126,7 @@ const ClusterMap = () => {
             </Marker>
           )
         })}
+        <GeocoderInput />
       </ReactMapGl>
     </Box>
   )
