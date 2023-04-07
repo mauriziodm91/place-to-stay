@@ -13,7 +13,7 @@ import {
 } from '@mui/material'
 import { StarBorder } from '@mui/icons-material'
 const Rooms = () => {
-  const { filteredRooms } = useContext(Context)
+  const { filteredRooms, setUpdateRoom } = useContext(Context)
   return (
     <Container>
       <ImageList
@@ -44,6 +44,7 @@ const Rooms = () => {
                 alt={room.title}
                 loading='lazy'
                 style={{ cursor: 'pointer' }}
+                onClick={() => setUpdateRoom(room)}
               />
               <ImageListItemBar
                 title={room.title}
