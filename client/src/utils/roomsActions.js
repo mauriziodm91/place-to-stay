@@ -9,7 +9,8 @@ export const createRoom = async (
   setAlert,
   setCurrentUser,
   setResetUser,
-  setPage
+  setPage,
+  setUpdateRoom
 ) => {
   setStartLoading()
   const result = await fetchData(
@@ -25,6 +26,7 @@ export const createRoom = async (
     })
     setResetUser()
     setPage(0)
+    setUpdateRoom(result)
   }
   setEndLoading()
 }

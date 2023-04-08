@@ -27,6 +27,7 @@ const AddRoom = ({ setPage }) => {
     setAlert,
     setStartLoading,
     setEndLoading,
+    setUpdateRoom,
   } = useContext(Context)
   const [steps, setSteps] = useState([
     { label: 'Location', completed: false },
@@ -109,7 +110,8 @@ const AddRoom = ({ setPage }) => {
       setAlert,
       setCurrentUser,
       setResetRoom,
-      setPage
+      setPage,
+      setUpdateRoom
     )
   }
 

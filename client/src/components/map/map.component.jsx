@@ -1,10 +1,11 @@
 import { useContext, useEffect, useState } from 'react'
 import { Context } from '../../context/contextprovider.context'
 import { getRooms } from '../../utils/roomsActions'
-import ReactMapGl, { Marker } from 'react-map-gl'
+import ReactMapGl, { Marker, Popup } from 'react-map-gl'
 import { Avatar, Box, Paper, Tooltip } from '@mui/material'
 import GeocoderInput from '../geocoder-input/geocoder-input.component'
 import Supercluster from 'supercluster'
+import PopupRoom from '../popup-room/popuproom.component'
 import './map.styles.css'
 
 const supercluster = new Supercluster({
@@ -19,6 +20,7 @@ const ClusterMap = () => {
   const [clusters, setClusters] = useState([])
   const [bounds, setBounds] = useState([-180, -85, 180, 85])
   const [zoom, setZoom] = useState(0)
+  const [popupInfo, setPopupInfo] = useState(null)
 
   let isMounted = true
 
@@ -121,12 +123,25 @@ const ClusterMap = () => {
                   src={cluster.properties.uPhoto}
                   component={Paper}
                   elevation={2}
+                  onClick={() => setPopupInfo(cluster.properties)}
                 />
               </Tooltip>
             </Marker>
           )
         })}
         <GeocoderInput />
+        {popupInfo && (
+          <Popup
+            longitude={popupInfo.lng}
+            latitude={popupInfo.lat}
+            maxWidth='auto'
+            closeOnClick={false}
+            focusAfterOpen={false}
+            onClose={() => setPopupInfo(null)}
+          >
+            <PopupRoom {...{ popupInfo }} />
+          </Popup>
+        )}
       </ReactMapGl>
     </Box>
   )
